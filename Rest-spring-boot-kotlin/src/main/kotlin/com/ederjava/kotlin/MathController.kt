@@ -1,9 +1,7 @@
 package com.ederjava.kotlin
 
-import org.apache.tomcat.util.http.parser.HttpParser.isNumeric
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.concurrent.atomic.AtomicLong
 
@@ -21,12 +19,19 @@ class MathController {
         return convertToDouble(numberOne) +  convertToDouble(numberTwo)
     }
 
-    private fun convertToDouble(numberOne: String?): Double {
-          return 0.0
+    private fun convertToDouble(strNumber: String?): Double {
+        if (strNumber.isNullOrBlank())return 0.0
+          // mesclando (,) ou (.)
+        val number = strNumber.replace(",".toRegex(), replacement = ".")
+        return if (isNumeric(number)) number.toDouble() else 0.0
+
+
     }
 
-    private fun isNumeric(numberOne: String?): Boolean {
-         return false;
+    private fun isNumeric(strNumber: String?): Boolean {
+        if (strNumber.isNullOrBlank()) return false;
+        val number = strNumber.replace(",".toRegex(), replacement = ".")
+        return number.matches("""[+-]?[0-9]*\.?[0-9]+""".toRegex())
     }
 
 
